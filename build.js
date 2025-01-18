@@ -15,11 +15,6 @@ function build(pattern){
         platform: 'neutral',
         external: ['tjs:path'],
         outfile: path.resolve(path.dirname(entry), 'index.js'),
-        plugins: [
-          alias({
-            'lvgljs-ui': path.resolve(__dirname, './src/render/react/index.js'),
-          }),
-        ],
         define: {
           'process.env.NODE_ENV': '"development"',
         }
@@ -31,5 +26,5 @@ function build(pattern){
   }
 }
 
-build('demo/*/*.jsx')
-build('test/**/*.jsx')
+build('demo/*/*.{jsx,tsx}')
+build('test/*/*.{jsx,tsx}')

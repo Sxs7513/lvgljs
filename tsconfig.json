@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "module": "NodeNext",
+      "typeRoots": [
+        "node_modules/@txikijs/types",
+        "node_modules/@types"
+      ]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["**/*.spec.ts"]
+  }

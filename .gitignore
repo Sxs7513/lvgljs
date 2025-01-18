@@ -20,3 +20,4 @@ CMakeCache.txt
 
 # NPM
 node_modules/
+src/render/react/index.js
