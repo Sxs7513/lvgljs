@@ -11,7 +11,7 @@ export const getUid = () => {
 const instanceMap = new Map();
 
 export const getInstance = (uid) => {
-  return instanceMap[uid];
+  return instanceMap.get(uid);
 };
 
 const HostConfig = {
@@ -53,7 +53,6 @@ const HostConfig = {
       workInProgress,
       uid,
     );
-    instanceMap[uid] = instance;
     return instance;
   },
   createTextInstance: (
@@ -124,12 +123,16 @@ const HostConfig = {
   commitTextUpdate(textInstance, oldText, newText) {
     textInstance.setText(newText);
   },
+  detachDeletedInstance: (instance) => {
+    unRegistEvent(instance.uid);
+    instanceMap.delete(instance.uid);
+    instance.style = null; // Proxy preventing GC
+  },
   removeChild(parent, child) {
     parent?.removeChild(child);
-    unRegistEvent(child.uid);
-    delete instanceMap[child.uid];
   },
   commitMount: function (instance, type, newProps, internalInstanceHandle) {
+    instanceMap.set(instance.uid, instance);
     const { commitMount } = getComponentByTagName(type);
     return commitMount(instance, newProps, internalInstanceHandle);
   },

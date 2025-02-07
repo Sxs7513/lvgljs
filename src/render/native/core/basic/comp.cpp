@@ -45,9 +45,7 @@ void BasicComponent::insertChildBefore(void *child) {
     }
 };
 
-void BasicComponent::removeChild(void* child) {
-    lv_obj_del_async((static_cast<BasicComponent*>(child))->instance);
-};
+void BasicComponent::removeChild(void* child) {};
 
 void BasicComponent::appendChild (void* child) {
     static_cast<BasicComponent*>(child)->parent_instance = this->instance;
@@ -86,7 +84,7 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     lv_style_prop_t* old_transProps = this->trans_props_map[type];
 
     this->trans_props_map[type] = (lv_style_prop_t*)malloc((len + 1) * sizeof(lv_style_prop_t));
-    
+
     JSValue props = JS_GetPropertyUint32(ctx, obj, 1);
     int32_t prop_key;
     for(int i=0; i < len; i++) {
@@ -255,8 +253,13 @@ BasicComponent::~BasicComponent () {
     if (ptr2) {
         free((lv_coord_t*)(ptr2));
     }
-    // do not del here, remove child will do the action
-    // lv_obj_del(this->instance);
+
+    for(auto &style : style_map) {
+        lv_style_reset(style.second);
+    }
+
+    lv_obj_remove_event_cb(instance, &BasicComponent::EventCallback);
+    lv_obj_del(this->instance);
 };
 
 void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {
